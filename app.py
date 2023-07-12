@@ -3,6 +3,7 @@ from handlers.userHandler import userRouter
 from dotenv import load_dotenv
 import os
 from flask_cors import CORS
+from config import Config, DevelopmentConfig, ProductionConfig
 
 load_dotenv()
 
@@ -10,12 +11,14 @@ PORT = os.getenv('PORT')
 
 app = Flask(__name__)
 cors = CORS(app)
+env_config = os.getenv("PROD_APP_SETTINGS", "config.DevelopmentConfig")
+if env_config == "config.ProductionConfig":
+    app.config.from_object(ProductionConfig)
+else:
+    app.config.from_object(DevelopmentConfig)
 
 app.register_blueprint(userRouter)
 
 @app.route('/')
 def index():
     return 'server running!'
-
-if __name__ == '__main__':
-    app.run(port=PORT)
