@@ -15,10 +15,10 @@ def signUp():
     if(check(request_data.get('email'), 'email') == True):
         return jsonify({'message': 'email already exists'}), 400
     
-    if(check(request_data.get('username'), 'username')):
+    if(check(request_data.get('username'), 'username') == True):
         return jsonify({'message': 'username already exists'}), 400
     
-    if(check(request_data.get('password'), 'password')):
+    if(check(request_data.get('password'), 'password') == True):
         return jsonify({'message': 'password already exists'}), 400
 
     user1 = user(username=request_data.get('username'),
