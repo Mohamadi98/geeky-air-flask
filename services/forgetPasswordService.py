@@ -5,12 +5,12 @@ from services.passwordHash import hashFunc
 
 def forgetPass(email, password):
     db_client, cur = connect()
-    cur.execute('SELECT * FROM users WHERE email = %s', (email,))
+    query = 'SELECT * FROM users WHERE email = %s'
+    cur.execute(query, (email,))
     result = cur.fetchone()
     if result == None:
         return jsonify({'message': 'No account associated with this email'})
     
     hashedPassword = hashFunc(password)
-    print(hashedPassword)
     
     return updatePass(email, hashedPassword)

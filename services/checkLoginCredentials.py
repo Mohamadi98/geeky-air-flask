@@ -4,7 +4,8 @@ from services.passwordHash import verifyHash
 
 def loginCredsCheck(username, password):
     db_client, cur = connect()
-    cur.execute('SELECT * FROM users WHERE username = %s', (username,))
+    query = f'SELECT * FROM users WHERE username = %s'
+    cur.execute(query, (username,))
     result = cur.fetchone()
     if result == None:
         cur.close()
@@ -14,8 +15,6 @@ def loginCredsCheck(username, password):
     # the result returned is a tuple without keys, the order of the password coloumn is second
     # hence index 1 is used to retrieve the password
     hashed_password = result[1]
-    # fetchedUserName = result[2]
-    # fetchedEmail = result[3]
     fetchedRole = result[5]
 
     if fetchedRole == 'admin':
