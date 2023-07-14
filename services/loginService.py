@@ -13,8 +13,9 @@ def generateToken(username):
 
     return jsonify({'token': token})
 
-def verifyToken(token, secret_key):
+def verifyToken(token):
     try:
+        secret_key = os.getenv('SECRET_KEY')
         # decode the token using the secret key and the HS256 algorithm
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
 
