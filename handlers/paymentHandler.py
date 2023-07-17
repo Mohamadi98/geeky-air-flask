@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, redirect
+from flask import Blueprint, request, jsonify, redirect, make_response
 import stripe
 from dotenv import load_dotenv
 import os
@@ -39,7 +39,11 @@ def checkoutSession():
         return str(e)
 
     #return redirect(checkout_session.url, 302)
-    return redirect(checkout_session.url, 302)
+    # return redirect(checkout_session.url, 302)
+    response = make_response(redirect(checkout_session.url, 302))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+
+    return response
 
 @paymentRouter.route('/success')
 def success():
