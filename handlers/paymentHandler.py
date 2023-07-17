@@ -42,6 +42,9 @@ def checkoutSession():
     # return redirect(checkout_session.url, 302)
     response = make_response(redirect(checkout_session.url, 302))
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
 
     return response
 
