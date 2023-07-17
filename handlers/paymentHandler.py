@@ -40,7 +40,7 @@ def checkoutSession():
 
     return jsonify({'URL': checkout_session.url})
 
-@paymentRouter.route('/success')
+@paymentRouter.route('/success', methods = ['POST'])
 def success():
     session_id = request.args.get('session_id')
     mytoken = request.args.get('token')
