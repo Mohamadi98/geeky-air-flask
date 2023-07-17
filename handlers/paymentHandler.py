@@ -38,7 +38,7 @@ def checkoutSession():
     except Exception as e:
         return str(e)
 
-    return checkout_session.url
+    return jsonify({'URL': checkout_session.url})
 
 @paymentRouter.route('/success')
 def success():
