@@ -29,6 +29,9 @@ def checkoutSession():
             success_url=f"{DOMAIN}/success?session_id={{CHECKOUT_SESSION_ID}}&token={token}",
             cancel_url = DOMAIN + '/cancel'
         )
+
+        return jsonify({'URL': checkout_session.url})
+    
     except stripe.error.AuthenticationError as e:
         return "Authentication Error: " + str(e)
     except stripe.error.InvalidRequestError as e:
@@ -38,9 +41,7 @@ def checkoutSession():
     except Exception as e:
         return str(e)
 
-    return jsonify({'URL': checkout_session.url})
-
-@paymentRouter.route('/success', methods = ['POST'])
+@paymentRouter.route('/success')
 def success():
     session_id = request.args.get('session_id')
     mytoken = request.args.get('token')
