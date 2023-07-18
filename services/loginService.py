@@ -33,21 +33,12 @@ def verifyToken(token):
     
 def getUserFromToken(token):
     try:
-        print(token)
-        if isinstance(token, str):
-            print("token is a string")
-        else:
-            print("token is not a string")
-        secret_key = os.getenv('SECRET_KEY')
+        secret_key = os.getenv('SECRET_TOKEN')
         # decode the token using the secret key and the HS256 algorithm
-        payload = jwt.decode(str(token), secret_key, algorithms=["HS256"])
+        payload = jwt.decode(token, secret_key, algorithms=["HS256"])
 
-        print(payload)
-
-        # extract the username from the payload
         username = payload["username"]
 
-        # return the username
         return username
     except jwt.ExpiredSignatureError:
         # handle the case where the token has expired
