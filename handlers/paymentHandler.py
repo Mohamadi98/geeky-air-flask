@@ -49,7 +49,8 @@ def success():
     if sessionObj.payment_status == 'paid':
         username = getUserFromToken(mytoken)
         addBalance(50.0, username)
-        return jsonify({'message': 'payment successful and balance updated'})
+        home_url = 'https://re-bamp.vercel.app/'
+        return redirect(home_url, 302)
 
 @paymentRouter.route('/cancel')
 def cancel():
