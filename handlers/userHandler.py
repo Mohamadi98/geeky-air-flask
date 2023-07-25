@@ -5,6 +5,7 @@ from services.checkDuplicates import check
 from services.checkLoginCredentials import loginCredsCheck
 from services.loginService import generateToken
 from services.forgetPasswordService import forgetPass
+from services.getUserInfoService import get_user_info
 
 userRouter = Blueprint('userHandler', __name__)
 
@@ -47,3 +48,10 @@ def forgetPassword():
     password = request_data.get('password')
     
     return forgetPass(email, password)
+
+@userRouter.route('/user-info', methods=['POST'])
+def user_info():
+    request_data = request.get_json()
+    token = request_data.get('token')
+
+    return get_user_info(token)

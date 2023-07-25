@@ -55,8 +55,6 @@ def success():
     sessionObj = stripe.checkout.Session.retrieve(session_id)
     if sessionObj.payment_status == 'paid':
         username = getUserFromToken(mytoken)
-        print(f'username after fetching it from token = {username}')
-        print(f'the value given to addbalance function = {value}')
         result = addBalance(value, username)
         # home_url = 'https://re-bamp.vercel.app/'
         # return redirect(home_url, 302)

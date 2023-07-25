@@ -6,6 +6,7 @@ from flask_cors import CORS
 from config import Config, DevelopmentConfig, ProductionConfig
 from database import initialize
 from handlers.paymentHandler import paymentRouter
+from handlers.imagesHandler import imageRouter
 
 load_dotenv()
 
@@ -24,6 +25,7 @@ initialize()
 
 app.register_blueprint(userRouter)
 app.register_blueprint(paymentRouter)
+app.register_blueprint(imageRouter)
 
 @app.route('/')
 def index():
