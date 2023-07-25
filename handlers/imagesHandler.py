@@ -9,7 +9,7 @@ load_dotenv()
 imageRouter = Blueprint('imageHandler', __name__)
 REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_KEY')
 
-@imageRouter.route('/image-generator')
+@imageRouter.route('/image-generator', methods = ['POST'])
 def index():
     request_data = request.get_json()
     token = request_data.get('token')
