@@ -10,6 +10,7 @@ load_dotenv()
 paymentRouter = Blueprint('paymentHandler', __name__)
 
 DOMAIN = os.getenv('DOMAIN')
+SERVER_DOMAIN = os.getenv('SERVER_DOMAIN')
 
 @paymentRouter.route('/create-checkout-session', methods = ['POST'])
 def checkoutSession():
@@ -32,8 +33,8 @@ def checkoutSession():
                 },
             ],
             mode='payment',
-            success_url=f"{DOMAIN}/success?session_id={{CHECKOUT_SESSION_ID}}&token={token}&amount={amount}",
-            cancel_url = DOMAIN + '/cancel'
+            success_url=f"{SERVER_DOMAIN}/success?session_id={{CHECKOUT_SESSION_ID}}&token={token}&amount={amount}",
+            cancel_url = DOMAIN + '/checkoutfailed'
         )
 
         return jsonify({'URL': checkout_session.url})
@@ -56,14 +57,8 @@ def success():
     if sessionObj.payment_status == 'paid':
         username = getUserFromToken(mytoken)
         result = addBalance(value, username)
-        # home_url = 'https://re-bamp.vercel.app/'
-        # return redirect(home_url, 302)
         if result == True:
-            return jsonify({
-            'message': 'paymnet successful and balance updated'
-        })
-
-
-@paymentRouter.route('/cancel')
-def cancel():
-    return 'Session canceled'
+            return redirect(DOMAIN + '/checkoutsuccess')
+        
+    else:
+        return redirect(DOMAIN + '/checkoutfailed')
