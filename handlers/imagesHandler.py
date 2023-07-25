@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 import replicate
 from dotenv import load_dotenv
 import os
@@ -26,7 +26,9 @@ def index():
                 "num_outputs": 1 
                 }
         )
-        return output
+        return jsonify({
+            'URL': output
+        })
     
     else:
         return result
