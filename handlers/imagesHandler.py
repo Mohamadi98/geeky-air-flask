@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from services.loginService import verifyToken
 from services.chargeUserService import charge_user
+from services.storeImageService import store_image
 
 load_dotenv()
 
@@ -59,12 +60,21 @@ def modify_generated_image_without_prompt():
                 "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
                 }
         )
-        return output[1]
+        new_image_url =  output[1]
+        result = store_image(token, new_image_url)
+
+        if result == True:
+            return jsonify({
+                'URL': output[1]
+            })
+        else:
+            return result
+
 
     else:
         return token_verification
     
-@imageRouter.route('/image-generate-modify')
+@imageRouter.route('/image-generate-modify', methods = ['POST'])
 def modify_generated_image_with_prompt():
     request_data = request.get_json()
     token = request_data.get('token')
@@ -84,7 +94,15 @@ def modify_generated_image_with_prompt():
                 "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
                 }
         )
-        return output[1]
+        new_image_url =  output[1]
+        result = store_image(token, new_image_url)
+
+        if result == True:
+            return jsonify({
+                'URL': output[1]
+            })
+        else:
+            return result
 
     else:
         return token_verification
