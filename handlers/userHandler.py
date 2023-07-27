@@ -6,6 +6,7 @@ from services.checkLoginCredentials import loginCredsCheck
 from services.loginService import generateToken
 from services.forgetPasswordService import forgetPass
 from services.getUserInfoService import get_user_info
+import base64
 
 userRouter = Blueprint('userHandler', __name__)
 
@@ -60,6 +61,7 @@ def user_info():
 def sameh():
     request_data = request.get_json()
     image = request_data.get('image')
-    print(image)
-    data_type = type(image)
+    binary_data = base64.b64decode(image)
+    print(f'this image is in binary: {binary_data}')
+    data_type = type(binary_data)
     return data_type
