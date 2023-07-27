@@ -2,10 +2,10 @@ from database import connect
 from flask import jsonify
 from services.passwordHash import verifyHash
 
-def loginCredsCheck(username, password):
+def loginCredsCheck(email, password):
     db_client, cur = connect()
-    query = f'SELECT * FROM users WHERE username = %s'
-    cur.execute(query, (username,))
+    query = 'SELECT * FROM users WHERE email = %s'
+    cur.execute(query, (email,))
     result = cur.fetchone()
     if result == None:
         cur.close()
@@ -17,7 +17,7 @@ def loginCredsCheck(username, password):
     hashed_password = result[1]
     fetchedRole = result[5]
 
-    if fetchedRole == 'admin':
+    if fetchedRole == 'admin' and verifyHash(password, hashed_password):
         return fetchedRole
     
     if verifyHash(password, hashed_password):

@@ -29,12 +29,12 @@ def signUp():
 @userRouter.route('/login', methods = ['POST'])
 def login():
     request_data = request.get_json()
-    username = request_data.get('username')
+    username = request_data.get('email')
     password = request_data.get('password')
     result = loginCredsCheck(username, password)
     
     if result == False:
-        return jsonify({'message': 'Invalid username or password'}), 400
+        return jsonify({'message': 'Invalid email or password'}), 400
     
     if result == 'admin':
         return jsonify({'message': 'admin user'}), 200
@@ -55,3 +55,9 @@ def user_info():
     token = request_data.get('token')
 
     return get_user_info(token)
+
+@userRouter.route('/sameh', methods = ['post'])
+def sameh():
+    request_data = request.get_json()
+    image = request_data.get('image')
+    return type(image)
