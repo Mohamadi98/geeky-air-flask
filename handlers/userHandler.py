@@ -60,5 +60,6 @@ def user_info():
 def sameh():
     request_data = request.get_json()
     image = request_data.get('image')
+    print(image)
     data_type = type(image)
     return data_type
