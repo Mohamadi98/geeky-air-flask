@@ -5,10 +5,10 @@ from flask import jsonify
 
 load_dotenv()
 
-def generateToken(username):
+def generateToken(email):
     # to set the expiry date of the token to 15 mins
     #expiry = datetime.datetime.utcnow() + datetime.timedelta(minutes=15)
-    user = {'username': username}
+    user = {'email': email}
     token = jwt.encode(user, os.getenv('SECRET_TOKEN'), algorithm='HS256')
 
     return jsonify({'token': token})
@@ -20,7 +20,7 @@ def verifyToken(token):
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
 
         # extract the username from the payload
-        username = payload["username"]
+        email = payload["email"]
 
         # return the username
         return True
@@ -37,9 +37,9 @@ def getUserFromToken(token):
         # decode the token using the secret key and the HS256 algorithm
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
 
-        username = payload["username"]
+        email = payload["email"]
 
-        return username
+        return email
     except jwt.ExpiredSignatureError:
         # handle the case where the token has expired
         return jsonify({'message': 'token has expired'}), 400

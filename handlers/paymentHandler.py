@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, redirect, make_response
+from flask import Blueprint, request, jsonify, redirect
 import stripe
 from dotenv import load_dotenv
 import os
@@ -55,8 +55,8 @@ def success():
     value = request.args.get('amount')
     sessionObj = stripe.checkout.Session.retrieve(session_id)
     if sessionObj.payment_status == 'paid':
-        username = getUserFromToken(mytoken)
-        result = addBalance(value, username)
+        email = getUserFromToken(mytoken)
+        result = addBalance(value, email)
         if result == True:
             return redirect(DOMAIN + '/checkoutsuccess')
         

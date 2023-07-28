@@ -9,7 +9,7 @@ def get_user_info(token):
     if isinstance(username, tuple) and len(username) == 2 and username[1] == 400:
         return username[0]
     
-    query = 'SELECT username, email, balance FROM users WHERE username = %s;'
+    query = 'SELECT username, email, balance FROM users WHERE email = %s;'
     cur.execute(query, (username,))
     result = cur.fetchone()
     if result is None:
