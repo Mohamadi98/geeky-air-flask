@@ -56,12 +56,3 @@ def user_info():
     token = request_data.get('token')
 
     return get_user_info(token)
-
-@userRouter.route('/sameh', methods = ['post'])
-def sameh():
-    request_data = request.get_json()
-    image = request_data.get('image')
-    binary_data = base64.b64decode(image)
-    print(f'this image is in binary: {binary_data}')
-    data_type = type(binary_data)
-    return data_type

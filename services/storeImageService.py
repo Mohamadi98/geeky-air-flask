@@ -5,12 +5,12 @@ from services.loginService import getUserFromToken
 def store_image(token, image_url):
     db_client, cur = connect()
 
-    username = getUserFromToken(token)
-    if isinstance(username, tuple) and len(username) == 2 and username[1] == 400:
-        return username[0]
+    email = getUserFromToken(token)
+    if isinstance(email, tuple) and len(email) == 2 and email[1] == 400:
+        return email[0]
     
-    query = 'SELECT id FROM users WHERE username = %s'
-    cur.execute(query, (username,))
+    query = 'SELECT id FROM users WHERE email = %s'
+    cur.execute(query, (email,))
     result = cur.fetchone()[0]
 
     query2 = 'INSERT INTO image (user_id, image_url) VALUES (%s, %s)'

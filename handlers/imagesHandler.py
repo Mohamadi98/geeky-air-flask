@@ -5,6 +5,7 @@ import os
 from services.loginService import verifyToken
 from services.chargeUserService import charge_user
 from services.storeImageService import store_image
+from services.saveImageToUploads import save_base64_image, delete_image_from_uploads
 
 load_dotenv()
 
@@ -41,68 +42,75 @@ def index():
 #     token = request_data.get('token')
 #     return charge_user(token)
 
-@imageRouter.route('/image-generate-surprise-me', methods = ['POST'])
-def modify_generated_image_without_prompt():
+@imageRouter.route('/modify-image-upload', methods = ['POST'])
+def modify_image_upload():
     request_data = request.get_json()
-    token = request_data.get('token')
-    image_url = request_data.get('url')
-
-    token_verification = verifyToken(token)
-
-    if token_verification == True:
-        output = replicate.run(
-            "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
-            input={
-                "image": image_url,
-                "prompt": "",
-                "num_samples": "1",
-                "image_resolution": "512",
-                "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
-                }
-        )
-        new_image_url =  output[1]
-        result = store_image(token, new_image_url)
-
-        if result == True:
-            return jsonify({
-                'URL': output[1]
-            })
-        else:
-            return result
-
+    if 'prompt' in request_data:
+        prompt = request_data.get('prompt')
 
     else:
-        return token_verification
-    
-@imageRouter.route('/image-generate-modify', methods = ['POST'])
-def modify_generated_image_with_prompt():
-    request_data = request.get_json()
+        prompt = ""
+
     token = request_data.get('token')
-    image_url = request_data.get('url')
-    prompt = request_data.get('prompt')
+    image = request_data.get('image')
 
     token_verification = verifyToken(token)
 
     if token_verification == True:
-        output = replicate.run(
-            "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
-            input={
-                "image": image_url,
-                "prompt": prompt,
-                "num_samples": "1",
-                "image_resolution": "512",
-                "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
-                }
-        )
-        new_image_url =  output[1]
-        result = store_image(token, new_image_url)
+        if len(image) < 200:
+            # the image is a url
+            output = replicate.run(
+                "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                input={
+                    "image": image,
+                    "prompt": prompt,
+                    "num_samples": "1",
+                    "image_resolution": "512",
+                    "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                    }
+            )
+            new_image_url =  output[1]
 
-        if result == True:
-            return jsonify({
-                'URL': output[1]
-            })
+            charge_confirm = charge_user(token)
+
+            if charge_confirm == True:
+                return jsonify({
+                    'URL': new_image_url
+                })
+            else:
+                return charge_confirm
+                
+    
         else:
-            return result
+            # the image is a base64 image
+            save_base64_image(image, f'{token}.jpg')
+            output = replicate.run(
+                "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                input={
+                    "image": open(os.path.join('uploads', f'{token}.jpg'), 'rb'),
+                    "prompt": prompt,
+                    "num_samples": "1",
+                    "image_resolution": "512",
+                    "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                    }
+            )
+            new_image_url =  output[1]
+
+
+            deletion_confirm = delete_image_from_uploads(f'{token}.jpg')
+            charge_confirm = charge_user(token)
+
+            if deletion_confirm:
+                if charge_confirm:
+                    return jsonify({
+                        'URL': new_image_url
+                    })
+                else:
+                    charge_confirm
+                
+            else:
+                return deletion_confirm
+
 
     else:
         return token_verification
