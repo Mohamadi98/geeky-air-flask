@@ -26,3 +26,12 @@ def delete_image_from_uploads(filename):
         return True
     else:
         print(f"File '{filename}' not found in the 'uploads' folder.")
+
+def check_image_exist(filename):
+    uploads_folder = 'uploads'
+    file_path = os.path.join(uploads_folder, filename)
+
+    if os.path.exists(file_path):
+        print('image exists in folder')
+    else:
+        print('image not found in folder')
