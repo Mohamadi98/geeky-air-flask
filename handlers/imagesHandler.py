@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 import replicate
 from dotenv import load_dotenv
 import os
-from services.loginService import verifyToken
+from services.loginService import verifyToken, getUserFromToken
 from services.chargeUserService import charge_user
 from services.saveImageToUploads import save_base64_image, delete_image_from_uploads, check_image_exist
 
@@ -24,6 +24,7 @@ def modify_image_upload():
     image = request_data.get('image')
 
     token_verification = verifyToken(token)
+    user_email = getUserFromToken(token)
 
     if token_verification == True:
         if len(image) < 200:
@@ -52,12 +53,12 @@ def modify_image_upload():
     
         else:
             # the image is a base64 image
-            save_base64_image(image, f'{token}.jpg')
-            check_image_exist(f'{token}.jpg')
+            save_base64_image(image, f'{user_email}.jpg')
+            check_image_exist(f'{user_email}.jpg')
             output = replicate.run(
                 "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
                 input={
-                    "image": open(os.path.join('uploads', f'{token}.jpg'), 'rb'),
+                    "image": open(os.path.join('uploads', f'{user_email}.jpg'), 'rb'),
                     "prompt": prompt,
                     "num_samples": "1",
                     "image_resolution": "512",
@@ -67,7 +68,7 @@ def modify_image_upload():
             new_image_url =  output[1]
 
 
-            deletion_confirm = delete_image_from_uploads(f'{token}.jpg')
+            deletion_confirm = delete_image_from_uploads(f'{user_email}.jpg')
             charge_confirm = charge_user(token)
 
             if deletion_confirm:
