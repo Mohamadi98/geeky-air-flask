@@ -5,12 +5,12 @@ from flask import jsonify
 def get_user_info(token):
     db_client, cur = connect()
 
-    username = getUserFromToken(token)
-    if isinstance(username, tuple) and len(username) == 2 and username[1] == 400:
-        return username[0]
+    email = getUserFromToken(token)
+    if isinstance(email, tuple) and len(email) == 2 and email[1] == 400:
+        return email[0]
     
     query = 'SELECT username, email, balance FROM users WHERE email = %s;'
-    cur.execute(query, (username,))
+    cur.execute(query, (email,))
     result = cur.fetchone()
     if result is None:
         return jsonify({
