@@ -4,43 +4,12 @@ from dotenv import load_dotenv
 import os
 from services.loginService import verifyToken
 from services.chargeUserService import charge_user
-from services.storeImageService import store_image
 from services.saveImageToUploads import save_base64_image, delete_image_from_uploads
 
 load_dotenv()
 
 imageRouter = Blueprint('imageHandler', __name__)
 REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_KEY')
-
-@imageRouter.route('/image-generator', methods = ['POST'])
-def index():
-    request_data = request.get_json()
-    token = request_data.get('token')
-    result = verifyToken(token)
-
-    if result == True:
-
-        prompt = request_data.get('prompt')
-        output = replicate.run(
-            "stability-ai/stable-diffusion:ac732df83cea7fff18b8472768c88ad041fa750ff7682a21affe81863cbe77e4",
-            input={"prompt": prompt,
-                "height": 640,
-                "width": 640,
-                "num_outputs": 1 
-                }
-        )
-        return jsonify({
-            'URL': output
-        })
-    
-    else:
-        return result
-    
-# @imageRouter.route('/charge-user', methods = ['POST'])
-# def charge():
-#     request_data = request.get_json()
-#     token = request_data.get('token')
-#     return charge_user(token)
 
 @imageRouter.route('/modify-image-upload', methods = ['POST'])
 def modify_image_upload():
