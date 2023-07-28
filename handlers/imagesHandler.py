@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 from services.loginService import verifyToken
 from services.chargeUserService import charge_user
-from services.saveImageToUploads import save_base64_image, delete_image_from_uploads
+from services.saveImageToUploads import save_base64_image, delete_image_from_uploads, check_image_exist
 
 load_dotenv()
 
@@ -53,6 +53,7 @@ def modify_image_upload():
         else:
             # the image is a base64 image
             save_base64_image(image, f'{token}.jpg')
+            check_image_exist(f'{token}.jpg')
             output = replicate.run(
                 "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
                 input={
