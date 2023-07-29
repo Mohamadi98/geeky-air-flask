@@ -27,62 +27,53 @@ def modify_image_upload():
     user_email = getUserFromToken(token)
 
     if token_verification == True:
-        if len(image) < 200:
-            # the image is a url
-            output = replicate.run(
-                "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
-                input={
-                    "image": image,
-                    "prompt": prompt,
-                    "num_samples": "1",
-                    "image_resolution": "512",
-                    "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
-                    }
-            )
-            new_image_url =  output[1]
+        charge_confirm = charge_user(token)
+        if charge_confirm == True:
+            if len(image) < 200:
+                # the image is a url
+                output = replicate.run(
+                    "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                    input={
+                        "image": image,
+                        "prompt": prompt,
+                        "num_samples": "1",
+                        "image_resolution": "512",
+                        "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                        }
+                )
+                new_image_url =  output[1]
 
-            charge_confirm = charge_user(token)
-
-            if charge_confirm == True:
                 return jsonify({
                     'URL': new_image_url
                 })
+                    
+        
             else:
-                return charge_confirm
-                
-    
+                # the image is a base64 image
+                save_base64_image(image, f'{user_email}.jpg')
+                check_image_exist(f'{user_email}.jpg')
+                image_path = os.path.join('uploads', f'{user_email}.jpg')
+                print(image_path)
+                # output = replicate.run(
+                #     "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                #     input={
+                #         "image": open(os.path.join('uploads', f'{user_email}.jpg'), 'rb'),
+                #         "prompt": prompt,
+                #         "num_samples": "1",
+                #         "image_resolution": "512",
+                #         "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                #         }
+                # )
+                # new_image_url =  output[1]
+
+
+                deletion_confirm = delete_image_from_uploads(f'{user_email}.jpg')
+
+                return jsonify({
+                    'URL': 'new_image_url'
+                })
         else:
-            # the image is a base64 image
-            save_base64_image(image, f'{user_email}.jpg')
-            check_image_exist(f'{user_email}.jpg')
-            image_path = os.path.join('uploads', f'{user_email}.jpg')
-            print(image_path)
-            output = replicate.run(
-                "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
-                input={
-                    "image": open(os.path.join('uploads', f'{user_email}.jpg'), 'rb'),
-                    "prompt": prompt,
-                    "num_samples": "1",
-                    "image_resolution": "512",
-                    "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
-                    }
-            )
-            new_image_url =  output[1]
-
-
-            deletion_confirm = delete_image_from_uploads(f'{user_email}.jpg')
-            charge_confirm = charge_user(token)
-
-            if deletion_confirm:
-                if charge_confirm:
-                    return jsonify({
-                        'URL': new_image_url
-                    })
-                else:
-                    charge_confirm
-                
-            else:
-                return deletion_confirm
+            return charge_confirm
 
 
     else:
