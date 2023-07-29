@@ -23,7 +23,6 @@ def delete_image_from_uploads(filename):
     if os.path.exists(file_path):
         # Delete the file
         os.remove(file_path)
-        print('image deleted from uploads folder')
         return True
     else:
         print(f"File '{filename}' not found in the 'uploads' folder.")

@@ -51,20 +51,17 @@ def modify_image_upload():
             else:
                 # the image is a base64 image
                 save_base64_image(image, f'{user_email}.jpg')
-                check_image_exist(f'{user_email}.jpg')
-                image_path = os.path.join('uploads', f'{user_email}.jpg')
-                print(image_path)
-                # output = replicate.run(
-                #     "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
-                #     input={
-                #         "image": open(os.path.join('uploads', f'{user_email}.jpg'), 'rb'),
-                #         "prompt": prompt,
-                #         "num_samples": "1",
-                #         "image_resolution": "512",
-                #         "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
-                #         }
-                # )
-                # new_image_url =  output[1]
+                output = replicate.run(
+                    "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                    input={
+                        "image": open(os.path.join('uploads', f'{user_email}.jpg'), 'rb'),
+                        "prompt": prompt,
+                        "num_samples": "1",
+                        "image_resolution": "512",
+                        "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                        }
+                )
+                new_image_url =  output[1]
 
 
                 deletion_confirm = delete_image_from_uploads(f'{user_email}.jpg')
