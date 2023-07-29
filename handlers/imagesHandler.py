@@ -55,6 +55,8 @@ def modify_image_upload():
             # the image is a base64 image
             save_base64_image(image, f'{user_email}.jpg')
             check_image_exist(f'{user_email}.jpg')
+            image_path = os.path.join('uploads', f'{user_email}.jpg')
+            print(image_path)
             output = replicate.run(
                 "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
                 input={
