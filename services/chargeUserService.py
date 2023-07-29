@@ -4,25 +4,26 @@ from flask import jsonify
 
 def charge_user(token):
     db_client, cur = connect()
-    username = getUserFromToken(token)
-    print(username)
-    if isinstance(username, tuple) and len(username) == 2 and username[1] == 400:
-        return username[0]
+    email = getUserFromToken(token)
+    print(email)
+    if isinstance(email, tuple) and len(email) == 2 and email[1] == 400:
+        return email[0]
 
     query = 'SELECT balance FROM users WHERE email = %s'
-    cur.execute(query, (username,))
+    cur.execute(query, (email,))
 
-    balance = cur.fetchone()[0]
+    balance = float(cur.fetchone()[0])
     print(balance)
 
-    if balance == 0:
+    if balance == 0.0:
         return jsonify({
             'message': 'not enough balance'
         }), 400
     
     new_balance = balance - 1.0
+    print(new_balance)
     query2 = 'UPDATE users SET balance = %s WHERE username = %s'
-    cur.execute(query2, (new_balance, username))
+    cur.execute(query2, (new_balance, email))
     db_client.commit()
 
     cur.close()
