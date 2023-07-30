@@ -52,7 +52,9 @@ def modify_image_upload():
                 # the image is a base64 image
                 save_base64_image(image, f'{user_email}.jpg')
                 image_path_in_uploads = os.path.join('uploads', f'{user_email}.jpg')
-                print(check_image_exist(image_path_in_uploads))
+                print(image_path_in_uploads)
+                print(check_image_exist(f'{user_email}.jpg'))
+
                 output = replicate.run(
                     "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
                     input={
@@ -67,10 +69,11 @@ def modify_image_upload():
 
 
                 deletion_confirm = delete_image_from_uploads(f'{user_email}.jpg')
-                print(check_image_exist(image_path_in_uploads))
+                print(deletion_confirm)
+                print(check_image_exist(f'{user_email}.jpg'))
 
                 return jsonify({
-                    'URL': 'new_image_url'
+                    'URL': new_image_url
                 })
         else:
             return charge_confirm
