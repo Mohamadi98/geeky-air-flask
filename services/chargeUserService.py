@@ -18,8 +18,8 @@ def charge_user(token):
             'message': 'not enough balance'
         }), 400
     
-    new_balance = balance - 1.0
-    query2 = 'UPDATE users SET balance = %s WHERE username = %s'
+    new_balance = balance - 1
+    query2 = 'UPDATE users SET balance = %s WHERE email = %s;'
     cur.execute(query2, (new_balance, email))
     db_client.commit()
 
