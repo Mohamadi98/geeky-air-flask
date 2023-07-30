@@ -11,6 +11,7 @@ def save_base64_image(base64_string, filename):
         with open(file_path, 'wb') as image_file:
             image_file.write(binary_data)
         
+        print('we are in save base64 function, and image is saved successfuly!')
         return True
 
     except Exception as e:
