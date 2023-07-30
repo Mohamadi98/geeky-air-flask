@@ -11,7 +11,6 @@ def save_base64_image(base64_string, filename):
         with open(file_path, 'wb') as image_file:
             image_file.write(binary_data)
         
-        print('we are in save base64 function, and image is saved successfuly!')
         return True
 
     except Exception as e:
@@ -31,7 +30,6 @@ def delete_image_from_uploads(filename):
 def check_image_exist(filename):
     uploads_folder = 'uploads'
     file_path = os.path.join(uploads_folder, filename)
-    print('we are in check image exists function ', file_path)
 
     if os.path.exists(file_path):
         print('image exists in folder')
