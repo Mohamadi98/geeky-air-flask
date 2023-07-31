@@ -4,7 +4,8 @@ from dotenv import load_dotenv
 import os
 from services.loginService import verifyToken, getUserFromToken
 from services.chargeUserService import charge_user
-from services.saveImageToUploads import save_base64_image, delete_image_from_uploads, check_image_exist
+from services.saveImageToUploads import save_base64_image, delete_image_from_uploads
+from services.shopImageService import google_lens_request
 
 load_dotenv()
 
@@ -77,3 +78,20 @@ def modify_image_upload():
 
     else:
         return token_verification
+    
+@imageRouter.route('/shop-modified-image', methods = ['POST'])
+def shop_modified_image():
+    request_data = request.get_json()
+    token = request_data.get('token')
+    image = request_data.get('image')
+    token_verification = verifyToken(token)
+    charge_confirm = charge_user(token)
+    if token_verification == True:
+        if charge_confirm == True:
+            return google_lens_request(image)
+        
+        else:
+            return charge_confirm
+    else:
+        return token_verification
+
