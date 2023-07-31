@@ -6,6 +6,7 @@ from services.loginService import verifyToken, getUserFromToken
 from services.chargeUserService import charge_user
 from services.saveImageToUploads import save_base64_image, delete_image_from_uploads
 from services.shopImageService import google_lens_request
+from services.storeImageService import store_image
 
 load_dotenv()
 
@@ -86,6 +87,11 @@ def shop_modified_image():
     image = request_data.get('image')
     token_verification = verifyToken(token)
     charge_confirm = charge_user(token)
+    store_image_confirm = store_image(token, image)
+    
+    if store_image_confirm != True:
+        return store_image_confirm
+    
     if token_verification == True:
         if charge_confirm == True:
             return google_lens_request(image)
