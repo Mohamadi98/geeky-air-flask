@@ -41,8 +41,8 @@ def google_lens_request(image):
         if (len(results_array) == 0):
             print('empty array')
         return jsonify({
-            'data': results_array
+            'data': results_array[0]
         })
     
     except Exception as e:
-        return e
+        return f'this is the ERROR: {e}'
