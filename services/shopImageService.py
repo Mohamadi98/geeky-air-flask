@@ -40,9 +40,7 @@ def google_lens_request(image):
         
         if (len(returned_value) == 0):
             print('empty array')
-        return ({
-            'data': returned_value
-        })
+        return (returned_value)
     
     except Exception as e:
         return e
