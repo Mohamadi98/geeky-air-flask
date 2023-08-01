@@ -94,8 +94,7 @@ def shop_modified_image():
     
     if token_verification == True:
         if charge_confirm == True:
-            results_array = google_lens_request(image)
-            return results_array
+            return google_lens_request(image)
         
         else:
             return charge_confirm
