@@ -2,6 +2,7 @@ import requests
 import json
 from dotenv import load_dotenv
 import os
+from flask import jsonify
 
 load_dotenv()
 
@@ -37,8 +38,11 @@ def google_lens_request(image):
             else:
                 continue
         
-        print(returned_value)
-        return returned_value
+        if (len(returned_value) == 0):
+            print('empty array')
+        return ({
+            'data': returned_value
+        })
     
     except Exception as e:
         return e
