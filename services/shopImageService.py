@@ -29,11 +29,13 @@ def google_lens_request(image):
                     link = match['link']
                     thumbnail_url = match['thumbnail'] 
                     description = match['title']
+                    currency = match['price']['currency']
                     obj1 = {
                         'link': link,
                         'thumbnail': thumbnail_url,
                         'price': price,
-                        'description': description
+                        'description': description,
+                        'currency': currency
                     }
                     results_array.append(obj1)
                 else:
