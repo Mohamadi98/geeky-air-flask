@@ -37,6 +37,7 @@ def google_lens_request(image):
             else:
                 continue
         
+        print(returned_value)
         return returned_value
     
     except Exception as e:
