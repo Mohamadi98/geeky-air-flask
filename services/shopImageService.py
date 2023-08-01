@@ -24,24 +24,25 @@ def google_lens_request(image):
         results_array = []
         for match in array:
             if 'price' in match:
-                link = match['link']
-                thumbnail_url = match['thumbnail']
                 price = match['price']['extracted_value']
-                description = match['title']
-                obj1 = {
-                    'link': link,
-                    'thumbnail': thumbnail_url,
-                    'price': price,
-                    'description': description
-                }
-                results_array.append(obj1)
+                if price > 50:
+                    link = match['link']
+                    thumbnail_url = match['thumbnail'] 
+                    description = match['title']
+                    obj1 = {
+                        'link': link,
+                        'thumbnail': thumbnail_url,
+                        'price': price,
+                        'description': description
+                    }
+                    results_array.append(obj1)
+                else:
+                    continue
             else:
                 continue
         
         print(results_array)
-        return jsonify({
-            'data': results_array
-        })
+        return results_array
     
     except Exception as e:
         return f'this is the ERROR: {e}'
