@@ -21,7 +21,7 @@ def google_lens_request(image):
         response = requests.get(url=api_url, params=params)
         data = json.loads(response.content)
         array = data["visual_matches"]
-        returned_value = []
+        results_array = []
         for match in array:
             if 'price' in match:
                 link = match['link']
@@ -34,13 +34,15 @@ def google_lens_request(image):
                     'price': price,
                     'description': description
                 }
-                returned_value.append(obj1)
+                results_array.append(obj1)
             else:
                 continue
         
-        if (len(returned_value) == 0):
+        if (len(results_array) == 0):
             print('empty array')
-        return (returned_value)
+        return jsonify({
+            'data': results_array
+        })
     
     except Exception as e:
         return e
