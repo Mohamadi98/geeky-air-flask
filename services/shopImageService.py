@@ -20,6 +20,8 @@ def google_lens_request(image):
         }
         response = requests.get(url=api_url, params=params)
         data = json.loads(response.content)
+        if 'visual_matches' not in data:
+            return 'empty array'
         array = data["visual_matches"]
         results_array = []
         for match in array:
@@ -38,8 +40,7 @@ def google_lens_request(image):
             else:
                 continue
         
-        if (len(results_array) == 0):
-            print('empty array')
+        print(results_array)
         return jsonify({
             'data': results_array[0]
         })
