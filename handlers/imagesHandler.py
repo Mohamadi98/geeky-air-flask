@@ -27,6 +27,52 @@ def modify_image_upload():
 
     token_verification = verifyToken(token)
     user_email = getUserFromToken(token)
+    if user_email == 'admin@email.com':
+        if len(image) < 200:
+                # the image is a url
+                output = replicate.run(
+                    "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                    input={
+                        "image": image,
+                        "prompt": prompt,
+                        "num_samples": "1",
+                        "image_resolution": "512",
+                        "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                        }
+                )
+                new_image_url =  output[1]
+
+                return jsonify({
+                    'URL': new_image_url
+                })
+                    
+        
+        else:
+            # the image is a base64 image
+            save_base64_image(image, f'{user_email}.jpg')
+            image_path_in_uploads = os.path.join('uploads', f'{user_email}.jpg')
+
+            output = replicate.run(
+                "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
+                input={
+                    "image": open(image_path_in_uploads, 'rb'),
+                    "prompt": prompt,
+                    "num_samples": "1",
+                    "image_resolution": "512",
+                    "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
+                    }
+            )
+            new_image_url =  output[1]
+
+
+            deletion_confirm = delete_image_from_uploads(f'{user_email}.jpg')
+
+            return jsonify({
+                'URL': new_image_url
+            })
+
+
+
 
     if token_verification == True:
         charge_confirm = charge_user(token)
@@ -88,9 +134,13 @@ def shop_modified_image():
     token_verification = verifyToken(token)
     charge_confirm = charge_user(token)
     store_image_confirm = store_image(token, image)
+    user_email = getUserFromToken(token)
     
     if store_image_confirm != True:
         return store_image_confirm
+    
+    if user_email == 'admin@email.com':
+        return google_lens_request(image)
     
     if token_verification == True:
         if charge_confirm == True:

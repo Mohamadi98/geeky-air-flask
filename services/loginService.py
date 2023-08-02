@@ -11,7 +11,7 @@ def generateToken(email):
     user = {'email': email}
     token = jwt.encode(user, os.getenv('SECRET_TOKEN'), algorithm='HS256')
 
-    return jsonify({'token': token})
+    return token
 
 def verifyToken(token):
     try:

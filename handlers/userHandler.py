@@ -30,17 +30,20 @@ def signUp():
 @userRouter.route('/login', methods = ['POST'])
 def login():
     request_data = request.get_json()
-    username = request_data.get('email')
+    email = request_data.get('email')
     password = request_data.get('password')
-    result = loginCredsCheck(username, password)
+    result = loginCredsCheck(email, password)
     
     if result == False:
         return jsonify({'message': 'Invalid email or password'}), 400
     
+    generated_token = generateToken(email)
     if result == 'admin':
-        return jsonify({'message': 'admin user'}), 200
+        return jsonify({'message': 'admin user',
+                        'token': generated_token
+                        }), 200
     
-    return generateToken(username)
+    return jsonify({'token': generated_token})
 
 @userRouter.route('/forgetpassword', methods=['POST'])
 def forgetPassword():
