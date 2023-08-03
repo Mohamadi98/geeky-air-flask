@@ -25,10 +25,11 @@ def get_user_info(token):
     balance = result[2]
     user_id = result[3]
 
-    # user_images = get_user_images(user_id)
+    user_images = get_user_images(user_id)
 
     return jsonify({
         'username': name,
         'email': email,
         'balance': balance,
+        'images': user_images
     })
