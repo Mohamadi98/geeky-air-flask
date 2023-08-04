@@ -5,11 +5,13 @@ def check_email_exist(email):
 
     query = 'SELECT email FROM users WHERE email = %s'
     cur.execute(query, (email,))
-    result = cur.fetchone()[0]
-    cur.close()
-    db_client.close()
+
+    result = cur.fetchone()
     if not result:
         return False
     
-    else:
-        return True
+    email = cur.fetchone()[0]
+    cur.close()
+    db_client.close()
+
+    return True
