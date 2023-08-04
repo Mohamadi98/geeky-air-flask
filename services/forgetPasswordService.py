@@ -1,20 +1,13 @@
-from database import connect
-from flask import jsonify
 from services.updatePassword import updatePass
-from services.passwordHash import hashFunc, verifyHash
+from services.passwordHash import hashFunc
+from services.loginService import getUserFromToken, verifyToken
 
-def forgetPass(email, password):
-    db_client, cur = connect()
-    query = 'SELECT password FROM users WHERE email = %s'
-    cur.execute(query, (email,))
-    result = cur.fetchone()
-    if result == None:
-        return jsonify({'message': 'No account associated with this email'})
+def forgetPass(token, password):
+    check_token = verifyToken(token)
+    if check_token != True:
+        return check_token
     
-    fetchedPassword = result[0]
-    if verifyHash(password, fetchedPassword):
-        return jsonify({'message': 'you already signed up with this password'})
-    
+    email = getUserFromToken(token)
     hashedPassword = hashFunc(password)
     
     return updatePass(email, hashedPassword)

@@ -55,10 +55,10 @@ def login():
 @userRouter.route('/forgetpassword', methods=['POST'])
 def forgetPassword():
     request_data = request.get_json()
-    email = request_data.get('email')
+    token = request_data.get('token')
     password = request_data.get('password')
     
-    return forgetPass(email, password)
+    return forgetPass(token, password)
 
 @userRouter.route('/user-info', methods=['POST'])
 def user_info():
@@ -69,18 +69,18 @@ def user_info():
 
 @userRouter.route('/forget-password-mail', methods = ['POST'])
 def send_mail_index():
-    # app_password = os.getenv('MAIL_APP_PASSWORD')
-    # return send_email(sender_email='mohamadinaena23@gmail.com', sender_password=app_password, recipient_email='essraabdalla2@gmail.com', subject='test', body='test message from python')
     request_data = request.get_json()
     email = request_data.get('email')
     result = check_email_exist(email)
     if result == True:
         email_token = generate_token_for_email(email)
-        return jsonify({
-            'URL': f'https://re-bamp.vercel.app/reset?token={email_token}'
-        })
 
     else:
         return jsonify({
             'message': 'no user associated with this email'
         })
+    
+    body = f'https://re-bamp.vercel.app/restpassword?token={email_token}'
+    
+    app_password = os.getenv('MAIL_APP_PASSWORD')
+    return send_email(sender_email='mohamadinaena23@gmail.com', sender_password=app_password, recipient_email='elma7y1996@gmail.com', subject='test', body=f'the URL ya sameh: {body}')
