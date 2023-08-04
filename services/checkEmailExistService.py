@@ -10,7 +10,7 @@ def check_email_exist(email):
     if not result:
         return False
     
-    email = cur.fetchone()[0]
+    email = result[0]
     cur.close()
     db_client.close()
 
