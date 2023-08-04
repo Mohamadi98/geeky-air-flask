@@ -8,8 +8,6 @@ def forgetPass(token, password):
         return check_token
     
     email = getUserFromToken(token)
-    print(password)
     hashedPassword = hashFunc(password)
-    print(hashedPassword)
     
     return updatePass(email, hashedPassword)
