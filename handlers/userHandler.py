@@ -82,5 +82,6 @@ def send_mail_index():
     
     body = f'https://re-bamp.vercel.app/restpassword?token={email_token}'
     
+    sending_email = os.getenv('SENDER_EMAIL')
     app_password = os.getenv('MAIL_APP_PASSWORD')
-    return send_email(sender_email='mohamadinaena23@gmail.com', sender_password=app_password, recipient_email=email, subject='test', body=f'Click On This Link To Reset Your Password!: {body}')
+    return send_email(sender_email=sending_email, sender_password=app_password, recipient_email=email, subject='test', body=f'Click On This Link To Reset Your Password!: {body}')
