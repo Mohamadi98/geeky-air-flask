@@ -16,11 +16,17 @@ REPLICATE_API_TOKEN = os.getenv('REPLICATE_API_KEY')
 @imageRouter.route('/modify-image-upload', methods = ['POST'])
 def modify_image_upload():
     request_data = request.get_json()
-    if 'prompt' in request_data:
-        prompt = request_data.get('prompt')
+    if 'type' in request_data:
+        room_type = request_data.get('type')
 
     else:
-        prompt = ""
+        room_type = ""
+
+    if 'theme' in request_data:
+        theme = request_data.get('theme')
+
+    else:
+        theme = ""
 
     token = request_data.get('token')
     image = request_data.get('image')
@@ -30,11 +36,12 @@ def modify_image_upload():
     if user_email == 'admin@email.com':
         if len(image) < 200:
                 # the image is a url
+                print(f'{theme} {room_type}')
                 output = replicate.run(
                     "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
                     input={
                         "image": image,
-                        "prompt": prompt,
+                        "prompt": f'{theme} {room_type}',
                         "num_samples": "1",
                         "image_resolution": "512",
                         "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
@@ -52,11 +59,12 @@ def modify_image_upload():
             save_base64_image(image, f'{user_email}.jpg')
             image_path_in_uploads = os.path.join('uploads', f'{user_email}.jpg')
 
+            print(f'{theme} {room_type}')
             output = replicate.run(
                 "jagilley/controlnet-hough:854e8727697a057c525cdb45ab037f64ecca770a1769cc52287c2e56472a247b",
                 input={
                     "image": open(image_path_in_uploads, 'rb'),
-                    "prompt": prompt,
+                    "prompt": f'{theme} {room_type}',
                     "num_samples": "1",
                     "image_resolution": "512",
                     "n_prompt": "longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality"
