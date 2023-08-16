@@ -138,7 +138,7 @@ def shop_modified_image():
     token = request_data.get('token')
     image = request_data.get('image')
     token_verification = verifyToken(token)
-    charge_confirm = charge_user(token)
+    # charge_confirm = charge_user(token)
     store_image_confirm = store_image(token, image)
     user_email = getUserFromToken(token)
     
@@ -149,11 +149,11 @@ def shop_modified_image():
         return google_lens_request(image)
     
     if token_verification == True:
-        if charge_confirm == True:
+        # if charge_confirm == True:
             return google_lens_request(image)
         
-        else:
-            return charge_confirm
+        # else:
+        #     return charge_confirm
     else:
         return token_verification
 
