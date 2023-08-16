@@ -140,6 +140,7 @@ def shop_modified_image():
     token_verification = verifyToken(token)
     charge_confirm = charge_user(token)
     store_image_confirm = store_image(token, image)
+    
     user_email = getUserFromToken(token)
     
     if store_image_confirm != True:
