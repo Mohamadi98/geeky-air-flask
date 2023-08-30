@@ -81,7 +81,7 @@ def modify_image_upload():
 
 
     if token_verification == True:
-        charge_confirm = charge_user(token)
+        charge_confirm = charge_user(token, 'modify')
         if charge_confirm == True:
             if len(image) < 200:
                 # the image is a url
@@ -138,7 +138,6 @@ def shop_modified_image():
     token = request_data.get('token')
     image = request_data.get('image')
     token_verification = verifyToken(token)
-    charge_confirm = charge_user(token)
     store_image_confirm = store_image(token, image)
     
     user_email = getUserFromToken(token)
@@ -150,6 +149,7 @@ def shop_modified_image():
         return google_lens_request(image)
     
     if token_verification == True:
+        charge_confirm = charge_user(token, 'shop')
         if charge_confirm == True:
             return google_lens_request(image)
         
