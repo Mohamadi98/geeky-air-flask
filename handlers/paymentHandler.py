@@ -15,9 +15,9 @@ SERVER_DOMAIN = os.getenv('SERVER_DOMAIN')
 @paymentRouter.route('/create-checkout-session', methods = ['POST'])
 def checkoutSession():
     products = {
-        50: 'price_1NTOkTKHiStKqqWzMup93HQ1',
-          100: 'price_1NTOlVKHiStKqqWzk5E85FoL',
-            150: 'price_1NTOmYKHiStKqqWza2xiDmOC'
+        50: 'price_1NkoAtKHiStKqqWzDghH2CRV',
+          100: 'price_1NkoFvKHiStKqqWzvX8ThsGW',
+            150: 'price_1NkoGnKHiStKqqWzyub2UpYV'
             }
     request_data = request.get_json()
     try:
